@@ -49,7 +49,7 @@ class livrosController extends Controller
                 'data' => $Livros
             ]);
         }
-        public function update(LivrosFormRequestUpdate $request)
+        public function atualizarLivros(LivrosFormRequestUpdate $request)
     {
         $Livros = Livros::find($request->id);
 
@@ -89,4 +89,36 @@ class livrosController extends Controller
         ]);  
     
 }
+
+public function pesquisarPorId($id)
+{
+    $Livros = Livros::find($id);
+    if ($Livros == null) {
+        return response()->json([
+            'status' => false,
+            'message' => "Id não encontrado"
+        ]);
+    }
+    return response()->json([
+        'status' => true,
+        'data' => $Livros
+    ]);
+}
+public function excluir($id)
+    {
+        $Livros = Livros::find($id);
+        if (!isset($Livros)) {
+            return response()->json([
+                'status' => false,
+                'message' => "Livro não encontrado"
+            ]);
+        }
+        $Livros->delete();
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Livro excluido com sucesso'
+        ]);
+    }
+
 }
