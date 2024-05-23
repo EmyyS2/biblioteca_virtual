@@ -46,7 +46,7 @@ class livrosController extends Controller
             $Livros = Livros::all();
             return response()->json([
                 'status' => true,
-                'data' => $Livros
+                'dados' => $Livros
             ]);
         }
         public function atualizarLivros(LivrosFormRequestUpdate $request)
