@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('livros', function (Blueprint $table) {
             $table->id();
             $table->string('titulo',100)->nullable(false);
-            $table->string('autor',50)->unique()->nullable(false);
+            $table->string('autor',50)->nullable(false);
             $table->date('data_de_lancamento')->nullable(false);
-            $table->string('editora',50)->unique()->nullable(false);
-            $table->string('sinopse',1000)->unique()->nullable(false);
+            $table->string('editora',50)->nullable(false);
+            $table->string('sinopse',1000)->nullable(false);
             $table->string('genero',50)->nullable(false);
             $table->string('avaliacao',1000)->nullable(false);
             $table->timestamps();
