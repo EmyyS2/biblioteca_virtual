@@ -12,46 +12,54 @@ class livrosController extends Controller
     public function Livros(livrosFormRequest $request)
     {
         $Livros = livros::create([
-        'titulo'=>$request->titulo,
-        'autor'=>$request->autor,
-        'data_de_lancamento'=>$request->data_de_lancamento,
-        'editora'=>$request->editora,
-        'sinopse'=>$request->sinopse,
-        'genero'=>$request->genero,
-        'avaliacao'=>$request->avaliacao
+            'titulo' => $request->titulo,
+            'autor' => $request->autor,
+            'data_de_lancamento' => $request->data_de_lancamento,
+            'editora' => $request->editora,
+            'sinopse' => $request->sinopse,
+            'genero' => $request->genero,
+            'avaliacao' => $request->avaliacao
         ]);
         return response()->json([
             'success' => true,
             'message' => "Livro cadastrado com sucesso",
             'data' => $Livros
         ], 200);
-        }
-        public function pesquisarPorTitulo(Request $request)
-        {
-            $Livros =  Livros::where('titulo', 'like', '%' . $request->titulo . '%')->get();
-            if (count($Livros) > 0) {
-                return response()->json([
-                    'status' => true,
-                    'data' => $Livros
-                ]);
-            }
-    
-            return response()->json([
-                'status' => false,
-                'message' => 'não existe livros com esse titulo registrado.'
-            ]);
-        }
-        public function retornarTodos()
-        {
-            $Livros = Livros::all();
+    }
+    public function pesquisarPorTitulo(Request $request)
+    {
+        $Livros =  Livros::where('titulo', 'like', '%' . $request->titulo . '%')->get();
+        if (count($Livros) > 0) {
             return response()->json([
                 'status' => true,
-                'dados' => $Livros
+                'data' => $Livros
             ]);
         }
-        public function atualizarLivros(LivrosFormRequestUpdate $request)
+
+        return response()->json([
+            'status' => false,
+            'message' => 'não existe livros com esse titulo registrado.'
+        ]);
+    }
+    public function retornarTodos()
     {
-        $Livros = Livros::find($request->id);
+        $Livros = livros::all();
+        $LivrosComImagem = $Livros->map(function ($Livros) {
+            return [
+                'titulo' => $Livros->titulo,
+                'autor' => $Livros->autor,
+                'data_de_lancamento' => $Livros->data_de_lancamento,
+                'editora' => $Livros->editora,
+                'sinopse' => $Livros->sinopse,
+                'genero' => $Livros->genero,
+                'avaliacao' => $Livros->avaliacao
+            ];
+        });
+        return response()->json($LivrosComImagem);
+    }
+    public function atualizarLivros(LivrosFormRequestUpdate $request)
+    {
+        $Livros = livros::find($request->id);
 
         if (!isset($Livros)) {
             return response()->json([
@@ -86,25 +94,24 @@ class livrosController extends Controller
         return response()->json([
             'status' => false,
             'message' => "Livros atualizado"
-        ]);  
-    
-}
-
-public function pesquisarPorId($id)
-{
-    $Livros = Livros::find($id);
-    if ($Livros == null) {
-        return response()->json([
-            'status' => false,
-            'message' => "Id não encontrado"
         ]);
     }
-    return response()->json([
-        'status' => true,
-        'data' => $Livros
-    ]);
-}
-public function excluir($id)
+
+    public function pesquisarPorId($id)
+    {
+        $Livros = Livros::find($id);
+        if ($Livros == null) {
+            return response()->json([
+                'status' => false,
+                'message' => "Id não encontrado"
+            ]);
+        }
+        return response()->json([
+            'status' => true,
+            'data' => $Livros
+        ]);
+    }
+    public function excluir($id)
     {
         $Livros = Livros::find($id);
         if (!isset($Livros)) {
@@ -120,5 +127,4 @@ public function excluir($id)
             'message' => 'Livro excluido com sucesso'
         ]);
     }
-
 }
